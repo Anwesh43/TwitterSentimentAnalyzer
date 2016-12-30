@@ -1,24 +1,31 @@
 from data_extractor import *
 from nlp_util import *
+from threading import *
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
+
 class SentimentAnalyzer:
     def __init__(self):
         dataExtractor = DataExtractor('data.txt')
         msgs,self.Y = dataExtractor.parseTextFile()
         self.Y = map(int,self.Y)
-        self.X_str = map(get_sentence_without_nouns,msgs)
+        print len(msgs)
+        #self.X_str = map(get_sentence_without_nouns,msgs)
+        self.X_str = msgs
         self.__split()
         self.__convertToVectors()
 
     def __convertToVectors(self):
+        print "coming here"
         self.cf = CountVectorizer()
         Xdtm = self.cf.fit_transform(self.x_str_train)
         self.x_train = Xdtm.toarray()
         self.x_test = self.cf.transform(self.x_str_test)
     def __split(self):
+        print "coming here"
         self.x_str_train,self.x_str_test,self.y_train,self.y_test = train_test_split(self.X_str,self.Y)
+        print "going from here"
     def train(self):
         print "going to train part"
         self.nb = MultinomialNB()
@@ -43,3 +50,5 @@ class SentimentAnalyzer:
 sentimentAnalyzer = SentimentAnalyzer()
 sentimentAnalyzer.train()
 sentimentAnalyzer.test()
+sentimentAnalyzer.predict("i hate julian hall")
+sentimentAnalyzer.predict("brokeback mountain is a good movie")

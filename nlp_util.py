@@ -17,5 +17,5 @@ def get_words_without_nouns(sentence):
     tags_without_pn = filter_nouns(sentence)
     return map(remove_tags,tags_without_pn)
 def get_sentence_without_nouns(sentence):
+    print "running"
     return ' '.join(get_words_without_nouns(sentence))
-print get_sentence_without_nouns('Da Vinci Code book is just awesome')
