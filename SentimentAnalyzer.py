@@ -13,13 +13,14 @@ class SentimentAnalyzer:
         self.__convertToVectors()
 
     def __convertToVectors(self):
-        cf = CountVectorizer()
-        Xdtm = cf.fit_transform(self.x_str_train)
+        self.cf = CountVectorizer()
+        Xdtm = self.cf.fit_transform(self.x_str_train)
         self.x_train = Xdtm.toarray()
-        self.x_test = cf.transform(self.x_str_test)
+        self.x_test = self.cf.transform(self.x_str_test)
     def __split(self):
         self.x_str_train,self.x_str_test,self.y_train,self.y_test = train_test_split(self.X_str,self.Y)
     def train(self):
+        print "going to train part"
         self.nb = MultinomialNB()
         self.nb.fit(self.x_train,self.y_train)
     def test(self):
@@ -33,6 +34,12 @@ class SentimentAnalyzer:
                 correct = correct+1
         accuracy = (correct*1.0)/len(y_pred)
         print 'accuracy is {0}'.format(accuracy)
+    def predict(self,message):
+        message_without_nouns = get_sentence_without_nouns(message)
+        Xdtm = self.cf.transform([message])
+        x_pred = Xdtm.toarray()
+        y_pred = self.nb.predict(x_pred)
+        print y_pred
 sentimentAnalyzer = SentimentAnalyzer()
 sentimentAnalyzer.train()
 sentimentAnalyzer.test()
